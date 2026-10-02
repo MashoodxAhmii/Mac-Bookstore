@@ -1,0 +1,335 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark, .dark *));
+
+/* ------------------------------------------------------------------ */
+/* Design tokens. This is the only file that contains literal colours.  */
+/* Concept: "reading lamp" - ink backgrounds with a warm amber glow in   */
+/* dark mode, cool paper with ink-blue text in light mode.               */
+/* All text pairs verified against WCAG AA (see README, "Contrast").     */
+/* ------------------------------------------------------------------ */
+:root {
+  --background: #f6f7fa;
+  --surface: rgb(255 255 255 / 0.66);
+  --surface-raised: rgb(238 240 245 / 0.62);
+  --surface-opaque: #ffffff;
+  --foreground: #10131c;
+  --muted-foreground: #5b6376;
+  --border: #e1e4ec;
+  --input: #8189a0;
+  /* stronger than --border so form fields hit 3:1 */
+  --primary: #24357a;
+  --primary-foreground: #ffffff;
+  --highlight: #b7791f;
+  /* amber: fills, icons, large text */
+  --highlight-foreground: #10131c;
+  --highlight-text: #8a5a0c;
+  /* amber for small text on light surfaces */
+  --destructive: #c0392b;
+  --destructive-foreground: #ffffff;
+  --success: #187a50;
+  /* darkened from #1f8a5b to pass 4.5:1 as text */
+  --ring: #24357a;
+  --scrim: rgb(16 19 28 / 0.5);
+
+  /* Generated book jackets (same in both themes, like real covers) */
+  --cover-1: #24357a;
+  --cover-2: #1b5e47;
+  --cover-3: #6b2d5c;
+  --cover-4: #8a4b14;
+  --cover-5: #3b4256;
+  --cover-foreground: #f6f7fa;
+
+  --radius: 0.5rem;
+
+  /* One shadow style in light mode, borders + glow in dark mode */
+  --elevation: 0 1px 2px rgb(16 19 28 / 0.06), 0 10px 28px -14px rgb(16 19 28 / 0.18);
+  --elevation-hover: 0 2px 4px rgb(16 19 28 / 0.08), 0 18px 36px -16px rgb(16 19 28 / 0.28);
+  --glow: transparent;
+
+  /* ---------------- Glassmorphism ---------------- */
+  --glass-blur: 20px;
+  --glass-blur-strong: 32px;
+  --glass-saturate: 160%;
+  --glass-border: rgb(255 255 255 / 0.5);
+  --glass-sheen: linear-gradient(135deg, rgb(255 255 255 / 0.35), rgb(255 255 255 / 0) 45%);
+  /* Soft ambient blobs behind the frosted panels */
+  --mesh-1: rgb(36 53 122 / 0.14);
+  --mesh-2: rgb(183 121 31 / 0.14);
+  --mesh-3: rgb(107 45 92 / 0.1);
+  --mesh-4: rgb(27 94 71 / 0.1);
+}
+
+.dark {
+  --background: #0b0f1a;
+  --surface: rgb(19 26 43 / 0.6);
+  --surface-raised: rgb(26 35 56 / 0.56);
+  --surface-opaque: #131a2b;
+  --foreground: #e9ecf4;
+  --muted-foreground: #98a1b5;
+  --border: #243049;
+  --input: #6b7690;
+  --primary: #e9ecf4;
+  --primary-foreground: #0b0f1a;
+  --highlight: #f2b14c;
+  --highlight-foreground: #0b0f1a;
+  --highlight-text: #f2b14c;
+  --destructive: #f0736a;
+  --destructive-foreground: #0b0f1a;
+  --success: #4fd08f;
+  --ring: #f2b14c;
+  --scrim: rgb(4 6 12 / 0.72);
+
+  --elevation: 0 0 0 1px var(--border), 0 0 26px -12px rgb(242 177 76 / 0.22);
+  --elevation-hover: 0 0 0 1px var(--border), 0 0 34px -8px rgb(242 177 76 / 0.34);
+  --glow: rgb(242 177 76 / 0.16);
+
+  /* ---------------- Glassmorphism ---------------- */
+  --glass-blur: 20px;
+  --glass-blur-strong: 32px;
+  --glass-saturate: 140%;
+  --glass-border: rgb(242 177 76 / 0.16);
+  --glass-sheen: linear-gradient(135deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0) 45%);
+  --mesh-1: rgb(242 177 76 / 0.12);
+  --mesh-2: rgb(79 208 143 / 0.08);
+  --mesh-3: rgb(233 236 244 / 0.06);
+  --mesh-4: rgb(107 45 92 / 0.14);
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--surface-raised);
+  --color-secondary-foreground: var(--foreground);
+  --color-muted: var(--surface-raised);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--surface-raised);
+  --color-accent-foreground: var(--foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-highlight-text: var(--highlight-text);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-scrim: var(--scrim);
+  --color-cover-1: var(--cover-1);
+  --color-cover-2: var(--cover-2);
+  --color-cover-3: var(--cover-3);
+  --color-cover-4: var(--cover-4);
+  --color-cover-5: var(--cover-5);
+  --color-cover-foreground: var(--cover-foreground);
+
+  --shadow-card: var(--elevation);
+  --shadow-card-hover: var(--elevation-hover);
+
+  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Newsreader Variable", ui-serif, Georgia, "Times New Roman", serif;
+}
+
+/* Radii by role: input, card, dialog (pills use rounded-full) */
+@theme {
+  --radius-input: 0.5rem;
+  --radius-card: 0.875rem;
+  --radius-dialog: 1.25rem;
+}
+
+/* Type scale: 12, 14, 16, 20, 28, 40, 64 */
+@theme {
+  --text-*: initial;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5;
+  --text-base: 1rem;
+  --text-base--line-height: 1.6;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.4;
+  --text-xl: 1.75rem;
+  --text-xl--line-height: 1.2;
+  --text-2xl: 2.5rem;
+  --text-2xl--line-height: 1.1;
+  --text-3xl: 4rem;
+  --text-3xl--line-height: 1.02;
+}
+
+/* ------------------------------------------------------------------ */
+/* Glassmorphism engine.                                                */
+/* Panels (`bg-card`, `bg-popover`, `bg-secondary`) are already translucent */
+/* via the tokens above; this is what turns them into frosted glass:      */
+/* blur + saturation, a soft sheen, and an ambient mesh to blur *through*.*/
+/* ------------------------------------------------------------------ */
+.bg-card,
+.bg-popover,
+.bg-secondary {
+  position: relative;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  background-image: var(--glass-sheen);
+  background-blend-mode: normal;
+}
+
+/* Stronger frost for elements that float above scrolling content. */
+.glass-nav,
+[data-slot="dialog-content"],
+[data-slot="sheet-content"] {
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+}
+
+/* A reusable frosted panel for one-off surfaces (hero pills, callouts). */
+.glass-panel {
+  background: var(--surface-raised);
+  background-image: var(--glass-sheen);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+}
+
+/* Ambient mesh: soft, slow-drifting colour blobs fixed behind the whole app so */
+/* the frosted panels above have something to actually show through. Pure CSS, */
+/* only transform/opacity move, GPU-composited, paused under reduced motion.   */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -10vh -10vw;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(38rem 38rem at 8% 12%, var(--mesh-1), transparent 60%),
+    radial-gradient(34rem 34rem at 92% 18%, var(--mesh-2), transparent 60%),
+    radial-gradient(40rem 40rem at 15% 92%, var(--mesh-3), transparent 60%),
+    radial-gradient(34rem 34rem at 88% 88%, var(--mesh-4), transparent 60%);
+  animation: mesh-drift 42s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes mesh-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-2%, 2%, 0) scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
+}
+
+/* Browsers/users without backdrop-filter support: fall back to a near-opaque panel */
+/* rather than a see-through one that can't be read. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --surface: rgb(255 255 255 / 0.97);
+    --surface-raised: rgb(238 240 245 / 0.97);
+  }
+  .dark {
+    --surface: rgb(19 26 43 / 0.97);
+    --surface-raised: rgb(26 35 56 / 0.97);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --surface: var(--surface-opaque);
+    --surface-raised: #eef0f5;
+  }
+  .dark {
+    --surface: var(--surface-opaque);
+    --surface-raised: #1a2338;
+  }
+  .bg-card,
+  .bg-popover,
+  .bg-secondary,
+  .glass-nav,
+  [data-slot="dialog-content"],
+  [data-slot="sheet-content"],
+  .glass-panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background-image: none;
+  }
+  body::before {
+    display: none;
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--highlight);
+    color: var(--highlight-foreground);
+  }
+
+  button,
+  [role="button"],
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer utilities {
+  .prose-read {
+    font-family: var(--font-serif);
+    line-height: 1.75;
+    max-width: 68ch;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}

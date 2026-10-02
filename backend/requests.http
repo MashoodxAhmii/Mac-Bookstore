@@ -1,0 +1,171 @@
+@baseUrl = http://localhost:1000
+
+### Test the Server
+GET {{baseUrl}}/
+
+### Sign Up a New User
+# This maps to the /sign-up route in your backend/routes/user.js file
+POST {{baseUrl}}/api/v1/sign-up
+Content-Type: application/json
+
+{
+    "username": "Chota",
+    "email": "chota@example.com",
+    "password": "chota123",
+    "address": "123 Main St, New York, NY"
+}
+
+### Sign In user
+POST {{baseUrl}}/api/v1/sign-in
+Content-Type: application/json
+
+{
+    "username": "Chota",
+    "password": "chota123"
+}
+
+### Sign In admin
+POST {{baseUrl}}/api/v1/sign-in
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin123"
+}
+
+### Get User Information
+# Replace the token and id with the values returned from the Sign In response above
+GET {{baseUrl}}/api/v1/get-user-information
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQ2hvdGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc4OTkyMzQzMiwiZXhwIjoxNzkyNTE1NDMyfQ.oe-3RIXI1_jvJwDJbEkue4gZgBRhNZ0725aRWYBaJaI
+id: 6ab00feed20a57ac74f723ac
+
+### Add book
+POST {{baseUrl}}/api/v1/add-book
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3ODk5MjU5MzQsImV4cCI6MTc5MjUxNzkzNH0.0zkoI1nOBqLZgqM8FRKJ4c9rqrn2vLoiwez9uWfQZ1c
+id: 6aaf1b82632ef57f83697dfb
+Content-Type: application/json
+
+{
+    "url": "https://upload.wikimedia.org/wikipedia/commons/0/06/Atomic_habits.jpg",
+    "title": "Atomic Habits",
+    "author": "James Clear",
+    "genre": "Self-Help",
+    "price": 399,
+    "stock": 100
+}
+
+###update book
+PUT {{baseUrl}}/api/v1/update-book
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3ODk5MjU5MzQsImV4cCI6MTc5MjUxNzkzNH0.0zkoI1nOBqLZgqM8FRKJ4c9rqrn2vLoiwez9uWfQZ1c
+id: 6aaf1b82632ef57f83697dfb
+bookid: 6ab01aa274687265ea3d3916
+Content-Type: application/json
+
+{
+    "url": "https://upload.wikimedia.org/wikipedia/commons/0/06/Atomic_habits.jpg",
+    "title": "Atomic Habits",
+    "author": "James Clear",
+    "genre": "Self-Help",
+    "price": 390,
+    "stock": 99
+}
+
+### Delete Book
+DELETE {{baseUrl}}/api/v1/delete-book
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3ODk5Mjc5ODUsImV4cCI6MTc5MjUxOTk4NX0.K9uiEXFOfQG3tzCmdGKTrzVALE1Mq38NXgwerkiRVvE
+id: 6aaf1b82632ef57f83697dfb
+bookid: 6ab01aa274687265ea3d3916
+
+### Get all books
+GET {{baseUrl}}/api/v1/get-all-books
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3ODk5NDIzMDgsImV4cCI6MTc5MjUzNDMwOH0.ayJkvXS-1nmEDuDEOTuL6eMP2GqArw1iSQy-wvvz748
+id: 6aaf1b82632ef57f83697dfb
+
+### Get Book by Id
+GET {{baseUrl}}/api/v1/get-book-by-id
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3ODk5NDIzMDgsImV4cCI6MTc5MjUzNDMwOH0.ayJkvXS-1nmEDuDEOTuL6eMP2GqArw1iSQy-wvvz748
+id: 6aaf1b82632ef57f83697dfb
+bookid: 6ab0207d2f035015f8828082
+
+### Update Address
+PUT {{baseUrl}}/api/v1/update-address
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3ODk5NDI1ODcsImV4cCI6MTc5MjUzNDU4N30.jmCRW2AKoX3qh20_NwT2VuOP2824JrRzC32JnQ3seOY
+id: 6aaf1b82632ef57f83697dfb
+Content-Type: application/json
+
+{
+    "address": "456 New St, New York, NY"
+}
+
+### Add Book to Favourite
+PUT {{baseUrl}}/api/v1/add-to-favourite
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQ2hvdGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc5MDAwNzE0NSwiZXhwIjoxNzkyNTk5MTQ1fQ.3dFPWyYW7_aNpacmgCt1z56BWPdgbEepGN3ZSFAQ4lY
+id: 6ab00feed20a57ac74f723ac
+Content-Type: application/json
+
+{
+    "bookId": "6ab0207d2f035015f882807f"
+}
+
+### Remove Book from Favourite
+PUT {{baseUrl}}/api/v1/remove-from-favourite
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQ2hvdGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc5MDAwNzE0NSwiZXhwIjoxNzkyNTk5MTQ1fQ.3dFPWyYW7_aNpacmgCt1z56BWPdgbEepGN3ZSFAQ4lY
+id: 6ab00feed20a57ac74f723ac
+Content-Type: application/json
+
+{
+    "bookId": "6ab0207d2f035015f882807f"
+}
+
+### Get All Favourite Books
+GET {{baseUrl}}/api/v1/get-all-favourite
+authorization: Bearer <your_token>
+id: <your_user_id>
+
+### Add to Cart
+PUT {{baseUrl}}/api/v1/add-to-cart
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQ2hvdGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc5MDAwNzY1NCwiZXhwIjoxNzkyNTk5NjU0fQ.LwgZ6RH2vGMOYQVj2tMaLFXEnjiMPEoAZq-9eOaX2U4
+id: 6ab00feed20a57ac74f723ac
+bookid: 6ab0207d2f035015f882807f
+
+### Remove from Cart
+PUT {{baseUrl}}/api/v1/remove-from-cart/6ab0207d2f035015f882807f
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQ2hvdGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc5MDAwNzY1NCwiZXhwIjoxNzkyNTk5NjU0fQ.LwgZ6RH2vGMOYQVj2tMaLFXEnjiMPEoAZq-9eOaX2U4
+id: 6ab00feed20a57ac74f723ac
+
+### Get User Cart
+GET {{baseUrl}}/api/v1/get-user-cart
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQ2hvdGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc5MDAwNzY1NCwiZXhwIjoxNzkyNTk5NjU0fQ.LwgZ6RH2vGMOYQVj2tMaLFXEnjiMPEoAZq-9eOaX2U4
+id: 6ab00feed20a57ac74f723ac
+
+### Place Order
+POST {{baseUrl}}/api/v1/place-order
+authorization: Bearer <your_token>
+id: <your_user_id>
+Content-Type: application/json
+
+{
+    "order": [
+        {
+            "_id": "<book_id>"
+        }
+    ]
+}
+
+### Get Order History
+GET {{baseUrl}}/api/v1/get-order-history
+authorization: Bearer <your_token>
+id: <your_user_id>
+
+### Get All Orders (Admin)
+GET {{baseUrl}}/api/v1/get-all-orders
+authorization: Bearer <your_admin_token>
+
+### Update Order Status (Admin)
+PUT {{baseUrl}}/api/v1/update-status/<order_id>
+authorization: Bearer <your_admin_token>
+Content-Type: application/json
+
+{
+    "status": "Out for delivery"
+}
