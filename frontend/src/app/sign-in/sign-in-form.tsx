@@ -12,7 +12,8 @@ import { Button } from "@/components/vengeance/button";
 import { Input } from "@/components/vengeance/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/vengeance/spinner";
-import { getMe, signIn } from "@/lib/api/auth";
+import { GoogleLogin } from "@react-oauth/google";
+import { getMe, signIn, signInWithGoogle } from "@/lib/api/auth";
 import { ApiError } from "@/lib/api/client";
 import { useAuth } from "@/lib/store/auth";
 import { safeNext } from "@/lib/utils";
@@ -106,6 +107,35 @@ export function SignInForm() {
         <Button type="submit" size="lg" className="w-full" aria-disabled={pending || undefined}>
           {pending ? <Spinner /> : null} Sign in
         </Button>
+        <div className="flex items-center justify-center space-x-2 my-4">
+           <span className="h-px w-full bg-border"></span>
+           <span className="text-xs text-muted-foreground uppercase">or</span>
+           <span className="h-px w-full bg-border"></span>
+        </div>
+        <div className="flex justify-center w-full">
+           <GoogleLogin
+             onSuccess={async (credentialResponse) => {
+               if (credentialResponse.credential) {
+                 try {
+                   setPending(true);
+                   const result = await signInWithGoogle(credentialResponse.credential);
+                   useAuth.getState().setSession({ token: result.token, id: result.id, role: result.role });
+                   useAuth.getState().setHasHydrated(true);
+                   const me = await getMe();
+                   const goAdmin = next?.startsWith("/admin") && me.role === "admin";
+                   router.replace(goAdmin ? next! : next ?? "/");
+                 } catch (error) {
+                   setFormError("Failed to sign in with Google.");
+                 } finally {
+                   setPending(false);
+                 }
+               }
+             }}
+             onError={() => {
+               setFormError("Google sign in failed.");
+             }}
+           />
+        </div>
       </form>
 
       <p className="text-center text-sm text-muted-foreground">

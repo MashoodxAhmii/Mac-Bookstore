@@ -3,6 +3,8 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { authenticateToken } = require("./userAuth");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // SIGN UP
 router.post("/sign-up", async (req, res) => {
@@ -81,6 +83,58 @@ router.post("/sign-in", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error signing in user" });
+    }
+});
+
+// GOOGLE OAUTH
+router.post("/google", async (req, res) => {
+    try {
+        const { idToken } = req.body;
+        const ticket = await client.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        const { email, name, picture } = payload;
+
+        let existingUser = await User.findOne({ email });
+
+        if (!existingUser) {
+            let username = name.replace(/\s+/g, '').toLowerCase();
+            let userExists = await User.findOne({ username });
+            if (userExists) {
+                username = username + Math.floor(Math.random() * 10000);
+            }
+
+            const hashPassword = await bcrypt.hash(email + (process.env.JWT_SECRET || "randomSecret123"), 10);
+
+            existingUser = new User({
+                username,
+                email,
+                password: hashPassword,
+                address: "Not provided",
+                avatar: picture || "https://cdn-icons-png.flaticon.com/128/3177/3177440.png",
+            });
+            await existingUser.save();
+        }
+
+        const authClaim = {
+            id: existingUser._id,
+            name: existingUser.username,
+            role: existingUser.role
+        };
+
+        const token = jwt.sign(authClaim, process.env.JWT_SECRET || "bookstore123", { expiresIn: "30d" });
+
+        res.status(200).json({
+            id: existingUser._id,
+            role: existingUser.role,
+            message: "User signed in with Google successfully",
+            token
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error authenticating with Google" });
     }
 });
 

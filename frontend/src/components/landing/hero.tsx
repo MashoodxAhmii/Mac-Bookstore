@@ -9,6 +9,7 @@ import { BookCover } from "@/components/books/book-cover";
 import { Button } from "@/components/vengeance/button";
 import type { Book } from "@/lib/api/types";
 import { useSession } from "@/lib/hooks/use-session";
+import { useTheme } from "next-themes";
 
 const LampGlow = dynamic(() => import("@/components/motion/lamp-glow"), { ssr: false });
 
@@ -20,22 +21,41 @@ export function Hero({ books }: HeroProps) {
   const { isAuthed } = useSession();
   const reduced = useReducedMotion();
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   // Take top 3 books for a minimalist fan display
   const topBooks = useMemo(() => books.slice(0, 3), [books]);
 
   return (
-    <section ref={sectionRef} className="relative isolate flex min-h-[min(90vh,60rem)] flex-col items-center justify-center overflow-hidden border-b border-border px-4 py-20 sm:px-6">
-      {/* Deep, clean background with very subtle ambient lighting */}
-      <div className="absolute inset-0 -z-10 bg-background dark:bg-[#0b0f1a]">
-        {/* Subtle, soft spot glow behind the text */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[40rem] w-[40rem] rounded-full bg-blue-500/5 dark:bg-indigo-500/10 blur-[100px] pointer-events-none" />
+    <section
+      ref={sectionRef}
+      className="relative flex min-h-[min(90vh,60rem)] flex-col items-center justify-center overflow-hidden border-b border-border px-4 py-20 sm:px-6"
+      style={{ background: isDark ? "#030014" : "#f8f8fc" }}
+    >
+      {/* Background glow orbs */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Dark mode: Cosmic Glass Glowing Orbs */}
+        {isDark && (
+          <>
+            <div className="absolute top-[20%] left-[30%] h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/30 blur-[120px] animate-pulse" />
+            <div className="absolute bottom-[10%] right-[20%] h-[35rem] w-[35rem] translate-x-1/2 translate-y-1/2 rounded-full bg-indigo-600/30 blur-[130px] animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-[50%] left-[50%] h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-fuchsia-600/20 blur-[140px] animate-pulse" style={{ animationDelay: '2s' }} />
+          </>
+        )}
+
+        {/* Light mode: subtle blue glow */}
+        {!isDark && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[40rem] w-[40rem] rounded-full bg-blue-500/5 blur-[100px]" />
+        )}
       </div>
-      
-      {/* Subtle Lamp Glow for premium feel */}
-      <div className="absolute inset-0 -z-10 opacity-60 mix-blend-screen pointer-events-none">
-        <LampGlow />
-      </div>
+
+      {/* LampGlow: ONLY in light mode — mix-blend-screen turns dark backgrounds grey */}
+      {!isDark && (
+        <div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
+          <LampGlow />
+        </div>
+      )}
 
       <div className="relative z-10 flex w-full max-w-5xl flex-col items-center text-center">
         
@@ -44,7 +64,7 @@ export function Hero({ books }: HeroProps) {
           initial={reduced ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="glass-panel mb-8 flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium text-muted-foreground"
+          className="glass-panel mb-8 flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium text-muted-foreground dark:border-white/10 dark:bg-white/5 dark:text-white/80"
         >
           <BookOpen className="size-4" />
           <span>Carefully curated literature</span>
@@ -55,10 +75,10 @@ export function Hero({ books }: HeroProps) {
           initial={reduced ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="font-sans text-[clamp(3rem,8vw,6rem)] leading-[1.05] font-bold tracking-tighter text-foreground text-balance"
+          className="font-sans text-[clamp(3rem,8vw,6rem)] leading-[1.05] font-bold tracking-tighter text-balance text-foreground dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-br dark:from-white dark:via-white/90 dark:to-white/40"
         >
-          Read <span className="text-muted-foreground">less.</span> <br className="hidden sm:block" />
-          Experience <span className="text-foreground">more.</span>
+          Read <span className="text-muted-foreground dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-br dark:from-white/60 dark:to-white/20">less.</span> <br className="hidden sm:block" />
+          Experience <span className="text-foreground dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-br dark:from-indigo-300 dark:via-purple-300 dark:to-violet-500">more.</span>
         </motion.h1>
 
         {/* Minimalist description */}
@@ -66,7 +86,7 @@ export function Hero({ books }: HeroProps) {
           initial={reduced ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl font-light text-balance"
+          className="mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl font-light text-balance dark:text-white/60"
         >
           A minimalist haven for readers. No endless feeds, no algorithm—just a beautifully curated collection of books that actually matter.
         </motion.p>
@@ -140,3 +160,4 @@ export function Hero({ books }: HeroProps) {
     </section>
   );
 }
+

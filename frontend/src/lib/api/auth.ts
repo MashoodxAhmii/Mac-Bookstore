@@ -27,6 +27,20 @@ export async function signIn(input: { username: string; password: string }): Pro
   };
 }
 
+export async function signInWithGoogle(idToken: string): Promise<SignInResult> {
+  const data = await apiFetch<{ id: string; role: Role; message: string; token: string }>("/google", {
+    method: "POST",
+    body: { idToken },
+    auth: false,
+  });
+  return {
+    id: String(data.id),
+    role: data.role === "admin" ? "admin" : "user",
+    message: data.message,
+    token: data.token,
+  };
+}
+
 export async function getMe(): Promise<User> {
   const data = await apiFetch<unknown>("/get-user-information");
   return toUser(data);
